@@ -36,8 +36,14 @@ This framework replaces manual administration with a **fully automated, event-dr
 
 To see the system execute 10,000 automated decisions hands-free on your local machine:
 
-1. **Activate the Background Watcher (Tab 1):**
-   ```bash
+
+ **Activate the Background Watcher (Tab 1):**
    python3 automation_workflow.py
    python3 generate_bulk_data.py
+   head -n 10 processed_enrollments.csv
+
+   Trigger the High-Volume Influx Server (Tab 2):
+   python3 generate_bulk_data.py
+
+   Review the Live Production Output File (Tab 2):
    head -n 10 processed_enrollments.csv
