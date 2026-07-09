@@ -1,15 +1,19 @@
-
 import csv
 
-# The script looks at the exact same local folder for your data
 input_file_name = 'students.csv'
+output_file_name = 'processed_enrollments.csv'
 
 print("🔄 Waking up local backend automation engine...")
 print("----------------------------------------")
 
 try:
-    with open(input_file_name, mode='r') as file:
-        csv_reader = csv.DictReader(file)
+    with open(input_file_name, mode='r') as infile, open(output_file_name, mode='w', newline='') as outfile:
+        csv_reader = csv.DictReader(infile)
+        
+        # Define the headers for our new automated output file
+        fieldnames = ['Name', 'Email', 'Course', 'Age', 'Assigned_Class', 'Status']
+        csv_writer = csv.DictWriter(outfile, fieldnames=fieldnames)
+        csv_writer.writeheader()
         
         student_count = 0
         for row in csv_reader:
@@ -22,31 +26,32 @@ try:
             
             # Local Logic Processing Engine
             if '@' not in email:
-                status = "❌ REJECTED: Invalid Email Structure"
+                status = "REJECTED: Invalid Email Structure"
                 assigned_class = "NONE"
-            
             elif age < 16:
-                status = "⚠️ HOLD: Underage Applicant (Requires Human Review)"
+                status = "HOLD: Underage Applicant"
                 assigned_class = "NONE"
-                
             elif course == "Computing":
-                status = "✅ SUCCESS: Enrolled"
+                status = "SUCCESS: Enrolled"
                 assigned_class = "COMP-A"
-                
             elif course == "Automation":
-                status = "✅ SUCCESS: Enrolled"
+                status = "SUCCESS: Enrolled"
                 assigned_class = "AUTO-B"
-                
             else:
-                status = "⚠️ HOLD: Unknown Course Route"
+                status = "HOLD: Unknown Course Route"
                 assigned_class = "UNKNOWN"
             
-            # Print output directly to your local terminal console
-            print(f"Student #{student_count} | Name: {name}")
-            print(f" -> Allocation: {assigned_class} | Status: {status}")
-            print("-" * 40)
+            # Write the row instantly to our new spreadsheet file
+            csv_writer.writerow({
+                'Name': name,
+                'Email': email,
+                'Course': course,
+                'Age': age,
+                'Assigned_Class': assigned_class,
+                'Status': status
+            })
 
-    print(f"🚀 Local pipeline complete! Total processed: {student_count} students.")
+    print(f"🚀 Data pipeline complete! Saved 10,000 automated decisions to '{output_file_name}'.")
 
 except FileNotFoundError:
     print(f"Error: Could not find '{input_file_name}' in this local repository folder.")
